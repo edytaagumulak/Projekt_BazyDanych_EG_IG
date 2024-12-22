@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace ProjektStrona_EG_IG.Migrations
 {
     /// <inheritdoc />
@@ -244,6 +246,37 @@ namespace ProjektStrona_EG_IG.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Zamowienia",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UzytkownikId = table.Column<int>(type: "int", nullable: false),
+                    DataZamowienia = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SzczegolyZamowienia = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Suma = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Zamowienia", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Zamowienia_Uzytkownik_UzytkownikId",
+                        column: x => x.UzytkownikId,
+                        principalTable: "Uzytkownik",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "42dc7a99-01a5-4248-9d1c-4f89757070e3", null, "Admin", "ADMIN" },
+                    { "cac2ae84-915c-495e-9391-3d4731626b8a", null, "User", "USER" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -302,6 +335,11 @@ namespace ProjektStrona_EG_IG.Migrations
                 name: "IX_Uzytkownik_AppUserId",
                 table: "Uzytkownik",
                 column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Zamowienia_UzytkownikId",
+                table: "Zamowienia",
+                column: "UzytkownikId");
         }
 
         /// <inheritdoc />
@@ -327,6 +365,9 @@ namespace ProjektStrona_EG_IG.Migrations
 
             migrationBuilder.DropTable(
                 name: "Koszyk");
+
+            migrationBuilder.DropTable(
+                name: "Zamowienia");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

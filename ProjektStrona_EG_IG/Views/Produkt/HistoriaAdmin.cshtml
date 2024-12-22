@@ -1,0 +1,38 @@
+﻿@model IEnumerable<ProjektStrona_EG_IG.Models.Zamowienie>
+
+@{
+    ViewData["Title"] = "Zamówienia - Admin";
+}
+
+<h1>Zamówienia</h1>
+<!--Sprawdza, czy model jest pusty-->
+@if (!Model.Any())
+{
+    <p>Nie ma żadnych zamówień.</p>
+}
+
+//Tabela tworząca i wyświetlająca listę wszystkich zamówień użytkowników
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Data Zamówienia</th>
+                <th>Użytkownik</th>
+                <th>Szczegóły Zamówienia</th>
+                <th>Suma</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var zamowienie in Model)
+            {
+                <tr>
+                    <td>@zamowienie.DataZamowienia.ToString("dd-MM-yyyy HH:mm")</td>
+                    <td>@zamowienie.Uzytkownik?.Email</td>
+                    <td>@zamowienie.SzczegolyZamowienia</td>
+                    <td>@zamowienie.Suma zł</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

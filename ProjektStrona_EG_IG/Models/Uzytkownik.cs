@@ -16,7 +16,7 @@ namespace ProjektStrona_EG_IG.Models
         [Required]
         public string Haslo { get; set; }
 
-        // Klucz obcy do AppUser
+        //Klucz obcy do AppUser
         [ForeignKey("AppUser")]
         public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }

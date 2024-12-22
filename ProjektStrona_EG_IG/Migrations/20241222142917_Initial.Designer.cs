@@ -12,7 +12,7 @@ using ProjektStrona_EG_IG.Areas.Identity.Data;
 namespace ProjektStrona_EG_IG.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241219130051_Initial")]
+    [Migration("20241222142917_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -24,32 +24,6 @@ namespace ProjektStrona_EG_IG.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Koszyk", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Ilosc")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProduktId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UzytkownikId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProduktId");
-
-                    b.HasIndex("UzytkownikId");
-
-                    b.ToTable("Koszyk");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -76,6 +50,20 @@ namespace ProjektStrona_EG_IG.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "42dc7a99-01a5-4248-9d1c-4f89757070e3",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "cac2ae84-915c-495e-9391-3d4731626b8a",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -295,6 +283,32 @@ namespace ProjektStrona_EG_IG.Migrations
                     b.ToTable("DaneUzytkownik");
                 });
 
+            modelBuilder.Entity("ProjektStrona_EG_IG.Models.Koszyk", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Ilosc")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProduktId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UzytkownikId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProduktId");
+
+                    b.HasIndex("UzytkownikId");
+
+                    b.ToTable("Koszyk");
+                });
+
             modelBuilder.Entity("ProjektStrona_EG_IG.Models.Produkt", b =>
                 {
                     b.Property<int>("Id")
@@ -351,23 +365,32 @@ namespace ProjektStrona_EG_IG.Migrations
                     b.ToTable("Uzytkownik");
                 });
 
-            modelBuilder.Entity("Koszyk", b =>
+            modelBuilder.Entity("ProjektStrona_EG_IG.Models.Zamowienie", b =>
                 {
-                    b.HasOne("ProjektStrona_EG_IG.Models.Produkt", "Produkt")
-                        .WithMany()
-                        .HasForeignKey("ProduktId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.HasOne("ProjektStrona_EG_IG.Models.Uzytkownik", "Uzytkownik")
-                        .WithMany()
-                        .HasForeignKey("UzytkownikId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Navigation("Produkt");
+                    b.Property<DateTime>("DataZamowienia")
+                        .HasColumnType("datetime2");
 
-                    b.Navigation("Uzytkownik");
+                    b.Property<decimal>("Suma")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SzczegolyZamowienia")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UzytkownikId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UzytkownikId");
+
+                    b.ToTable("Zamowienia");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -432,6 +455,25 @@ namespace ProjektStrona_EG_IG.Migrations
                     b.Navigation("Uzytkownik");
                 });
 
+            modelBuilder.Entity("ProjektStrona_EG_IG.Models.Koszyk", b =>
+                {
+                    b.HasOne("ProjektStrona_EG_IG.Models.Produkt", "Produkt")
+                        .WithMany()
+                        .HasForeignKey("ProduktId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProjektStrona_EG_IG.Models.Uzytkownik", "Uzytkownik")
+                        .WithMany()
+                        .HasForeignKey("UzytkownikId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Produkt");
+
+                    b.Navigation("Uzytkownik");
+                });
+
             modelBuilder.Entity("ProjektStrona_EG_IG.Models.Uzytkownik", b =>
                 {
                     b.HasOne("ProjektStrona_EG_IG.Areas.Identity.Data.AppUser", "AppUser")
@@ -441,6 +483,17 @@ namespace ProjektStrona_EG_IG.Migrations
                         .IsRequired();
 
                     b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("ProjektStrona_EG_IG.Models.Zamowienie", b =>
+                {
+                    b.HasOne("ProjektStrona_EG_IG.Models.Uzytkownik", "Uzytkownik")
+                        .WithMany()
+                        .HasForeignKey("UzytkownikId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Uzytkownik");
                 });
 #pragma warning restore 612, 618
         }

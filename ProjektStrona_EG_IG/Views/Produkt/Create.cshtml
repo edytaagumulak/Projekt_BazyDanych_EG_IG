@@ -43,6 +43,7 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<!--Sprawdza poprawność danych w formularzu po stronie klienta (przed wysłaniem na serwer)-->
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

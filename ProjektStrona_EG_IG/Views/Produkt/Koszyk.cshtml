@@ -6,43 +6,58 @@
 
 <h1>Koszyk</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Uzytkownik.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Produkt.Nazwa)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Ilosc)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<!--Sprawdza, czy model jest pusty-->
+@if (!Model.Any())
+{
+    <p>Twój koszyk jest pusty.</p>
+}
+
+//Tabela tworząca i wyświetlająca aktualną listę rzeczy w koszyku
+else
+{
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Uzytkownik.Email)  <!-- Wyświetlamy email użytkownika -->
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Produkt.Nazwa)  <!-- Wyświetlamy nazwę produktu -->
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Ilosc)  <!-- Wyświetlamy ilość produktu -->
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.Produkt.Nazwa)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Ilosc)
+                </th>
+                <th>
+                    @Html.DisplayName("Cena")
+                </th>
+                <th>Akcje</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Produkt.Nazwa)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Ilosc)
+                    </td>
+                    <td>
+                        @(item.Ilosc * item.Produkt.Cena) zł
+                    </td>
+                    <td>
+                       <!--Usuwanie produktów z koszyka (przesyłanie po id produktu do akcji w kontrolerze)-->
+                        <form asp-action="RemoveFromKoszyk" method="post">
+                            <input type="hidden" name="koszykId" value="@item.Id" />
+                            <!--Przycisk wykonujący akcję-->
+                            <button type="submit" class="btn btn-danger">Usuń</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <!--Zamawianie produktu (przesyłanie po id produktu do akcji w kontrolerze)-->
+        <form asp-action="Zamow" method="post">
+            <!--Przycisk do wykonania akcji-->
+            <button type="submit" class="btn btn-primary">Zamów teraz</button>
+        </form>
+    </table>
+}

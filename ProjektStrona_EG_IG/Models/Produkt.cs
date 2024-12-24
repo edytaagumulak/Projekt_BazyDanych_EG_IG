@@ -4,20 +4,20 @@ namespace ProjektStrona_EG_IG.Models
 {
     public class Produkt
     {
-        [Key]
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(100)]
+        [MaxLength(50)]
         public string Nazwa { get; set; }
 
+        [Required]
+        [MaxLength(100)]
         public string Opis { get; set; }
 
-        [Required]
+        [Range(0.0, double.MaxValue, ErrorMessage = "Cena nie może być mniejsza niż 0.")]
         public decimal Cena { get; set; }
 
-        [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "Ilość dostępnych produktów nie może być mniejsza niż 0.")]
         public int IloscDostepna { get; set; }
-
     }
 }

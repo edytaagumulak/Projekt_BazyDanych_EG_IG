@@ -1,0 +1,13 @@
+﻿@model ProjektStrona_EG_IG.Models.Produkt
+
+<h1>Usuń Produkt</h1>
+
+<div>
+    <h4>Na pewno chcesz usunąć ten produkt?</h4>
+    <p><strong>@Model.Nazwa</strong></p>
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Usuń</button>
+        <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+    </form>
+</div>

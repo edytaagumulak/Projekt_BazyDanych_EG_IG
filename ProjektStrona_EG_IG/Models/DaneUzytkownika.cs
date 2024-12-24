@@ -17,10 +17,11 @@ namespace ProjektStrona_EG_IG.Models
         public string Nazwisko { get; set; }
 
         [Required]
+        [MaxLength(100)]
         public string Adres { get; set; }
 
         [Required]
-        [MaxLength(20)]
+        [MaxLength(6)]
         public string KodPocztowy { get; set; }
 
         [Required]

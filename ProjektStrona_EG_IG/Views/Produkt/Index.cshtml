@@ -4,24 +4,28 @@
     ViewData["Title"] = "Lista Produktów";
 }
 
-<h1>Produkty</h1>
+<h1 style="color:aqua;">Lista Produktów</h1>
 
 <!--Sprawdza, czy użytkownik jest adminem-->
 @if (User.IsInRole("Admin"))
 {
     <p>
-        <a asp-action="Create">Create New</a>
+        <a asp-action="Create" style="  display: inline-block;padding: 10px 20px;background-color: #5F9BD1;color: white;text-decoration: none;border-radius: 5px;border: 2px solid #5F9BD1;font-size: 16px;font-weight: bold;text-align: center;transition: background-color 0.3s, border-color 0.3s;">Dodaj Produkt</a>
     </p>
 }
 <!--Lista produktów dostępnych w sklepie-->
 <table class="table">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.Nazwa)</th>
+            <th>Nazwa Produktu</th>
             <th>@Html.DisplayNameFor(model => model.Opis)</th>
             <th>@Html.DisplayNameFor(model => model.Cena)</th>
             <th>Ilość do kupienia</th>
-            <th>Akcje</th>
+            <th>Dostępna Ilość</th>
+            @if (User.IsInRole("Admin"))
+            {
+                <th>Zarządzaj</th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -35,14 +39,22 @@
                     <!--Dodawanie produktu do koszyka (przeniesienie produktu po id do akcji w kontrolerze)-->
                     <form asp-action="AddToKoszyk" method="post">
                         <input type="hidden" name="produktId" value="@item.Id" />
-                        <input type="number" name="ilosc" min="1" max="@item.IloscDostepna" value="1" class="form-control" style="width: 80px;" />
+                        <input type="number" name="ilosc" min="1" max="@item.IloscDostepna" value="0" class="form-control" style="width: 80px;" />
                         <!--Przycisk wykonujący akcję-->
                         <button type="submit" class="btn btn-primary btn-sm">Dodaj do koszyka</button>
                     </form>
                 </td>
+                <td>@Html.DisplayFor(modelItem => item.IloscDostepna)</td>
+                @if (User.IsInRole("Admin"))
+                {
                 <td>
-                    @Html.ActionLink("Szczegóły", "Details", new { id = item.Id }, new { @class = "btn btn-info btn-sm" })
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edytuj</a>
+                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
+                        </form>
                 </td>
+
+                }
             </tr>
         }
     </tbody>

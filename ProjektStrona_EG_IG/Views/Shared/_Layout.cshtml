@@ -14,7 +14,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Produkt" asp-action="Index">Kosmoteria</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -22,15 +22,21 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Produkt" asp-action="Koszyk">Koszyk</a>
                         </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Produkt" asp-action="ZamowieniaAdmin">Koszyki Klientów</a>
+                            </li>
+                        }
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Produkt" asp-action="ZamowieniaAdmin">Admin</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Produkt" asp-action="HistoriaTransakcji">Zamówienia</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Produkt" asp-action="HistoriaTransakcji">Historia</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Produkt" asp-action="HistoriaAdmin">Historia Admin</a>
-                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Produkt" asp-action="HistoriaAdmin">Spis Zamówień</a>
+                            </li>
+                        }
                     </ul>
                 </div>
                 <partial name="_LoginPartial" />

@@ -1,0 +1,26 @@
+﻿@model ProjektStrona_EG_IG.Models.Produkt
+
+<h1>Edytuj Produkt</h1>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="Nazwa"></label>
+        <input asp-for="Nazwa" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Opis"></label>
+        <textarea asp-for="Opis" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label asp-for="Cena"></label>
+        <input asp-for="Cena" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="IloscDostepna"></label>
+        <input asp-for="IloscDostepna" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Zapisz</button>
+    <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+</form>
+

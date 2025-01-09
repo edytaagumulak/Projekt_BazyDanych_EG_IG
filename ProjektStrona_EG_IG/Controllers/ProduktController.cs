@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjektStrona_EG_IG.Areas.Identity.Data;
@@ -24,12 +23,6 @@ namespace ProjektStrona_EG_IG.Controllers
             return View(produkty);
         }
 
-        // GET: ProduktController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         // GET: ProduktController/Create
         [Authorize(Roles = "Admin")]
         public ActionResult Create()
@@ -45,22 +38,27 @@ namespace ProjektStrona_EG_IG.Controllers
         {
             try
             {
-                if (ModelState.IsValid) //Walidacja modelu
+                if (ModelState.IsValid)
                 {
-                    _context.Produkt.Add(produkt); //Dodanie produktu do bazy
-                    _context.SaveChanges(); //Zapisanie zmian w bazie
-                    return RedirectToAction(nameof(Index)); //Powrót do listy produktów
+                    if (string.IsNullOrWhiteSpace(produkt.ZdjecieUrl))
+                    {
+                        ModelState.AddModelError("ZdjecieUrl", "Zdjęcie produktu jest wymagane.");
+                        return View(produkt);
+                    }
+
+                    _context.Produkt.Add(produkt);
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(Index));
                 }
-                return View(produkt); //Jeśli model nie jest poprawny, powrót do widoku Create
+                return View(produkt);
             }
             catch
             {
-                return View(produkt); //Jeśli wystąpił błąd, powrót do widoku Create
+                return View(produkt);
             }
         }
-        
 
-        //GET
+        //GET EDIT
         [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {
@@ -72,8 +70,7 @@ namespace ProjektStrona_EG_IG.Controllers
             return View(produkt);
         }
 
-
-        //POST
+        //POST EDIT
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -84,27 +81,46 @@ namespace ProjektStrona_EG_IG.Controllers
                 return BadRequest("Nieprawidłowe ID produktu.");
             }
 
-            //Dodatkowa walidacja w kontrolerze (opcjonalna, ale dla pewności)
-            if (produkt.Cena < 0)
+            if (string.IsNullOrWhiteSpace(produkt.ZdjecieUrl))
             {
-                ModelState.AddModelError("Cena", "Cena nie może być mniejsza niż 0.");
-            }
-
-            if (produkt.IloscDostepna < 0)
-            {
-                ModelState.AddModelError("IloscDostepna", "Ilość dostępnych produktów nie może być mniejsza niż 0.");
+                ModelState.AddModelError("ZdjecieUrl", "Zdjęcie produktu jest wymagane.");
             }
 
             if (ModelState.IsValid)
             {
-                _context.Entry(produkt).State = EntityState.Modified; //Oznacza produkt jako zmodyfikowany
+                _context.Entry(produkt).State = EntityState.Modified;
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            return View(produkt); //Powrót do widoku z błędami
+            return View(produkt);
         }
 
+        //GET DELETE
+        [Authorize(Roles = "Admin")]
+        public ActionResult Delete(int id)
+        {
+            var produkt = _context.Produkt.FirstOrDefault(p => p.Id == id);
+            if (produkt == null)
+            {
+                return NotFound("Produkt nie został znaleziony.");
+            }
+            return View(produkt);
+        }
 
+        //POST DELETE
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            var produkt = _context.Produkt.FirstOrDefault(p => p.Id == id);
+            if (produkt != null)
+            {
+                _context.Produkt.Remove(produkt);
+                _context.SaveChanges();
+            }
+            return RedirectToAction(nameof(Index));
+        }
 
         public ActionResult Koszyk()
         {
@@ -114,26 +130,21 @@ namespace ProjektStrona_EG_IG.Controllers
                 return Unauthorized();
             }
 
-            var koszyki = _context.Koszyk   //odwołanie do tabeli Koszyk w bazie
+            var koszyki = _context.Koszyk //odwołanie do tabeli Koszyk w bazie
                 .Where(k => k.Uzytkownik.AppUserId == userId) //Wyświetla tylko koszyk zalogowanego użytkownika
                 .Include(k => k.Produkt)
                 .ToList();
 
+            foreach (var koszyk in koszyki)
+            {
+                if (koszyk.Produkt == null || string.IsNullOrWhiteSpace(koszyk.Produkt.ZdjecieUrl))
+                {
+                    koszyk.Produkt.ZdjecieUrl = "/images/default.png";
+                }
+            }
+
             return View(koszyki);
         }
-
-        [Authorize(Roles = "Admin")]
-        public ActionResult ZamowieniaAdmin()
-        {
-            var zamowienia = _context.Koszyk //odwołanie do tabeli Koszyk w bazie
-                .Include(k => k.Uzytkownik) //Spis wszystkich zamówień
-                .Include(k => k.Produkt)
-                .ToList();
-
-            return View(zamowienia);
-        }
-
-
 
         [HttpPost]
         public IActionResult AddToKoszyk(int produktId, int ilosc)
@@ -141,9 +152,9 @@ namespace ProjektStrona_EG_IG.Controllers
             try
             {
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; //Pobiera ID zalogowanego użytkownika
-                if (userId == null)
+                if (userId == null)  //Brak autoryzacji jeżeli ID jest puste
                 {
-                    return Unauthorized(); //Brak autoryzacji jeżeli ID jest puste
+                    return Unauthorized();
                 }
 
                 //Wyszukanie użytkownika w bazie danych (AppUserId)
@@ -163,17 +174,24 @@ namespace ProjektStrona_EG_IG.Controllers
                 //Zmniejsza ilość produktow w bazie o zamówioną ilość
                 produkt.IloscDostepna -= ilosc;
 
-                var koszyk = new Koszyk
+                var koszyk = _context.Koszyk.FirstOrDefault(k => k.UzytkownikId == uzytkownik.Id && k.ProduktId == produktId);
+                if (koszyk != null)
                 {
-                    ProduktId = produktId,
-                    UzytkownikId = uzytkownik.Id, //Przypisanie do zalogowanego użytkownika
-                    Ilosc = ilosc
-                };
+                    koszyk.Ilosc += ilosc;
+                }
+                else
+                {
+                    koszyk = new Koszyk
+                    {
+                        ProduktId = produktId,
+                        UzytkownikId = uzytkownik.Id, //Przypisanie do zalogowanego użytkownika
+                        Ilosc = ilosc
+                    };
+                    _context.Koszyk.Add(koszyk); //Dodaje nowy element do koszyka użytkownika w bazie danych
+                }
 
-                _context.Koszyk.Add(koszyk); //Dodaje nowy element do koszyka użytkownika w bazie danych
                 _context.SaveChanges(); //Zapisanie zmian
-
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Koszyk));
             }
             catch
             {
@@ -181,32 +199,38 @@ namespace ProjektStrona_EG_IG.Controllers
             }
         }
 
-
-
         [HttpPost]
         public IActionResult RemoveFromKoszyk(int koszykId)
         {
-            //Wyszukaj pozycję w koszyku na podstawie przekazanego ID koszyka
-            var koszykItem = _context.Koszyk.FirstOrDefault(k => k.Id == koszykId);
-            if (koszykItem != null)
+            try
             {
-                //Wyszukaj produkty związane z danym koszykiem
-                var produkt = _context.Produkt.FirstOrDefault(p => p.Id == koszykItem.ProduktId);
-                if (produkt != null)
+                //Wyszukaj pozycję w koszyku na podstawie przekazanego ID koszyka
+                var pozycjaKoszyka = _context.Koszyk
+                    .Include(k => k.Produkt)
+                    .FirstOrDefault(k => k.Id == koszykId);
+
+                if (pozycjaKoszyka == null)
                 {
-                    //Zwiększenie ilości dostępnych produktów o zwróconą ilość
-                    produkt.IloscDostepna += koszykItem.Ilosc;
+                    return NotFound("Pozycja koszyka nie została znaleziona.");
                 }
 
+                //Zwiększenie ilości dostępnych produktów o zwróconą ilość
+                pozycjaKoszyka.Produkt.IloscDostepna += pozycjaKoszyka.Ilosc;
+
                 //Usuwanie pozycji koszyka z bazy danych
-                _context.Koszyk.Remove(koszykItem);
+                _context.Koszyk.Remove(pozycjaKoszyka);
+
                 _context.SaveChanges();
+
+                return RedirectToAction(nameof(Koszyk));
             }
-            return RedirectToAction(nameof(Koszyk));
+            catch
+            {
+                return BadRequest("Wystąpił błąd podczas usuwania pozycji z koszyka.");
+            }
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Zamow()
         {
             //Rozpoczęcie transakcji bazy danych
@@ -221,6 +245,10 @@ namespace ProjektStrona_EG_IG.Controllers
                 var uzytkownik = _context.Uzytkownik.FirstOrDefault(u => u.AppUserId == userId);
                 if (uzytkownik == null) return NotFound("Nie znaleziono użytkownika.");
 
+                var daneUzytkownika = _context.DaneUzytkownika.FirstOrDefault(d => d.UzytkownikId == uzytkownik.Id);
+                if (daneUzytkownika == null || daneUzytkownika.Imie == "Deafult")
+                    return NotFound("Nie znaleziono danych użytkownika.");
+
                 //Pobieranie koszyka użytkownika
                 var koszyk = _context.Koszyk
                     .Where(k => k.UzytkownikId == uzytkownik.Id)
@@ -234,8 +262,10 @@ namespace ProjektStrona_EG_IG.Controllers
                 decimal sumaZamowienia = koszyk.Sum(k => k.Ilosc * k.Produkt.Cena);
 
                 //Przygotowanie szczegółów zamówienia
-                var szczegoly = string.Join(", ",
-                    koszyk.Select(k => $"{k.Produkt.Nazwa} x{k.Ilosc}"));
+                var szczegoly = string.Join(", ", koszyk.Select(k => $"{k.Produkt.Nazwa} x{k.Ilosc}"));
+
+                var daneUzytkownikaTekst = $"{daneUzytkownika.Imie} {daneUzytkownika.Nazwisko}, " +
+                                           $"{daneUzytkownika.Adres}, {daneUzytkownika.KodPocztowy}";
 
                 //Utworzenie nowego zamówienia
                 var zamowienie = new Zamowienie
@@ -243,7 +273,8 @@ namespace ProjektStrona_EG_IG.Controllers
                     UzytkownikId = uzytkownik.Id,
                     DataZamowienia = DateTime.Now,
                     SzczegolyZamowienia = szczegoly,
-                    Suma = sumaZamowienia
+                    Suma = sumaZamowienia,
+                    DaneUzytkownika = daneUzytkownikaTekst
                 };
 
                 //Dodanie nowego zamówienia do bazy
@@ -251,7 +282,6 @@ namespace ProjektStrona_EG_IG.Controllers
 
                 //Usunięcie pozycji koszyka
                 _context.Koszyk.RemoveRange(koszyk);
-
                 _context.SaveChanges();
                 transaction.Commit();
 
@@ -259,12 +289,20 @@ namespace ProjektStrona_EG_IG.Controllers
             }
             catch
             {
-                //Rollback w przypadku, gdy wystąpi błąd
                 transaction.Rollback();
                 return BadRequest("Wystąpił błąd podczas realizacji zamówienia.");
             }
         }
+        [Authorize(Roles = "Admin")]
+        public ActionResult ZamowieniaAdmin()
+        {
+            var zamowienia = _context.Koszyk //odwołanie do tabeli Koszyk w bazie
+                .Include(k => k.Uzytkownik) //Spis wszystkich zamówień
+                .Include(k => k.Produkt)
+                .ToList();
 
+            return View(zamowienia);
+        }
 
         public IActionResult HistoriaTransakcji()
         {
@@ -297,35 +335,5 @@ namespace ProjektStrona_EG_IG.Controllers
             return View(zamowienia);
         }
 
-
-        //GET
-        [Authorize(Roles = "Admin")]
-        public ActionResult Delete(int id)
-        {
-            var produkt = _context.Produkt.FirstOrDefault(p => p.Id == id);
-            if (produkt == null)
-            {
-                return NotFound("Produkt nie został znaleziony.");
-            }
-            return View(produkt);
-        }
-
-
-        //POST
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            var produkt = _context.Produkt.FirstOrDefault(p => p.Id == id);
-            if (produkt != null)
-            {
-                _context.Produkt.Remove(produkt); //Usuwa produkt z bazy
-                _context.SaveChanges();
-            }
-            return RedirectToAction(nameof(Index));
-        }
-
     }
 }
-

@@ -5,22 +5,35 @@
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id" />
     <div class="form-group">
+        <label asp-for="ZdjecieUrl"></label>
+        <input asp-for="ZdjecieUrl" class="form-control" />
+        <span asp-validation-for="ZdjecieUrl" class="text-danger"></span>
+    </div>
+    <div class="form-group">
         <label asp-for="Nazwa"></label>
         <input asp-for="Nazwa" class="form-control" />
+        <span asp-validation-for="Nazwa" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Opis"></label>
         <textarea asp-for="Opis" class="form-control"></textarea>
+        <span asp-validation-for="Opis" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Cena"></label>
         <input asp-for="Cena" class="form-control" />
+        <span asp-validation-for="Cena" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="IloscDostepna"></label>
         <input asp-for="IloscDostepna" class="form-control" />
+        <span asp-validation-for="IloscDostepna" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">Zapisz</button>
     <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
 </form>
 
+<!--Walidacja-->
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

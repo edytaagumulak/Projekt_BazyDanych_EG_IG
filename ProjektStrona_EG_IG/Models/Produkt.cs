@@ -7,6 +7,10 @@ namespace ProjektStrona_EG_IG.Models
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(200)]
+        public string ZdjecieUrl { get; set; } // Link do zdjęcia
+
+        [Required]
         [MaxLength(50)]
         public string Nazwa { get; set; }
 
@@ -21,3 +25,4 @@ namespace ProjektStrona_EG_IG.Models
         public int IloscDostepna { get; set; }
     }
 }
+

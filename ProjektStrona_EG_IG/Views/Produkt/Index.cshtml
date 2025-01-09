@@ -10,13 +10,15 @@
 @if (User.IsInRole("Admin"))
 {
     <p>
-        <a asp-action="Create" style="  display: inline-block;padding: 10px 20px;background-color: #5F9BD1;color: white;text-decoration: none;border-radius: 5px;border: 2px solid #5F9BD1;font-size: 16px;font-weight: bold;text-align: center;transition: background-color 0.3s, border-color 0.3s;">Dodaj Produkt</a>
+        <a asp-action="Create" style="display: inline-block;padding: 10px 20px;background-color: #5F9BD1;color: white;text-decoration: none;border-radius: 5px;border: 2px solid #5F9BD1;font-size: 16px;font-weight: bold;text-align: center;transition: background-color 0.3s, border-color 0.3s;">Dodaj Produkt</a>
     </p>
 }
+
 <!--Lista produktów dostępnych w sklepie-->
 <table class="table">
     <thead>
         <tr>
+            <th>Zdjęcie</th>
             <th>Nazwa Produktu</th>
             <th>@Html.DisplayNameFor(model => model.Opis)</th>
             <th>@Html.DisplayNameFor(model => model.Cena)</th>
@@ -32,6 +34,9 @@
         @foreach (var item in Model)
         {
             <tr>
+                <td>
+                    <img src="@item.ZdjecieUrl" alt="@item.Nazwa" style="max-width: 100px; max-height: 100px;" />
+                </td>
                 <td>@Html.DisplayFor(modelItem => item.Nazwa)</td>
                 <td>@Html.DisplayFor(modelItem => item.Opis)</td>
                 <td>@Html.DisplayFor(modelItem => item.Cena)</td>
@@ -47,13 +52,12 @@
                 <td>@Html.DisplayFor(modelItem => item.IloscDostepna)</td>
                 @if (User.IsInRole("Admin"))
                 {
-                <td>
+                    <td>
                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edytuj</a>
                         <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
                             <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
                         </form>
-                </td>
-
+                    </td>
                 }
             </tr>
         }

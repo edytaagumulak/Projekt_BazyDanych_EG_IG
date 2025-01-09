@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjektStrona_EG_IG.Models
@@ -20,5 +21,8 @@ namespace ProjektStrona_EG_IG.Models
 
         [Required]
         public decimal Suma { get; set; }
+
+        [Required]
+        public string DaneUzytkownika { get; set; } // Kolumna w bazie danych
     }
 }

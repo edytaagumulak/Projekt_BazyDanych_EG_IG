@@ -11,22 +11,15 @@
 {
     <p>Twój koszyk jest pusty.</p>
 }
-
-//Tabela tworząca i wyświetlająca aktualną listę rzeczy w koszyku
 else
 {
     <table class="table">
         <thead>
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Produkt.Nazwa)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Ilosc)
-                </th>
-                <th>
-                    @Html.DisplayName("Cena")
-                </th>
+                <th>Zdjęcie</th>
+                <th>Nazwa</th>
+                <th>Ilość</th>
+                <th>Cena</th>
                 <th>Akcje</th>
             </tr>
         </thead>
@@ -35,16 +28,13 @@ else
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Produkt.Nazwa)
+                        <img src="@item.ZdjecieUrl" alt="@item.Produkt.Nazwa" style="max-width: 100px; max-height: 100px;" />
                     </td>
+                    <td>@item.Produkt.Nazwa</td>
+                    <td>@item.Ilosc</td>
+                    <td>@(item.Ilosc * item.Produkt.Cena) zł</td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Ilosc)
-                    </td>
-                    <td>
-                        @(item.Ilosc * item.Produkt.Cena) zł
-                    </td>
-                    <td>
-                       <!--Usuwanie produktów z koszyka (przesyłanie po id produktu do akcji w kontrolerze)-->
+                        <!--Usuwanie produktów z koszyka (przesyłanie po id produktu do akcji w kontrolerze)-->
                         <form asp-action="RemoveFromKoszyk" method="post">
                             <input type="hidden" name="koszykId" value="@item.Id" />
                             <!--Przycisk wykonujący akcję-->
@@ -54,10 +44,11 @@ else
                 </tr>
             }
         </tbody>
-        <!--Zamawianie produktu (przesyłanie po id produktu do akcji w kontrolerze)-->
-        <form asp-action="Zamow" method="post">
-            <!--Przycisk do wykonania akcji-->
-            <button type="submit" class="btn btn-primary">Zamów teraz</button>
-        </form>
     </table>
+    <!--Zamawianie produktu (przesyłanie po id produktu do akcji w kontrolerze)-->
+    <form asp-action="Zamow" method="post">
+        <!--Przycisk do wykonania akcji-->
+        <button type="submit" class="btn btn-primary">Zamów teraz</button>
+    </form>
+    
 }

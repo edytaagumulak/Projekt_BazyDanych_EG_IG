@@ -58,8 +58,9 @@ namespace ProjektStrona_EG_IG.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nazwa = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Opis = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ZdjecieUrl = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Nazwa = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Opis = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Cena = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     IloscDostepna = table.Column<int>(type: "int", nullable: false)
                 },
@@ -196,23 +197,22 @@ namespace ProjektStrona_EG_IG.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DaneUzytkownik",
+                name: "DaneUzytkownika",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Imie = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
                     Nazwisko = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
-                    Adres = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    KodPocztowy = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Adres = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    KodPocztowy = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
                     UzytkownikId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DaneUzytkownik", x => x.Id);
+                    table.PrimaryKey("PK_DaneUzytkownika", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DaneUzytkownik_Uzytkownik_UzytkownikId",
+                        name: "FK_DaneUzytkownika_Uzytkownik_UzytkownikId",
                         column: x => x.UzytkownikId,
                         principalTable: "Uzytkownik",
                         principalColumn: "Id",
@@ -255,7 +255,8 @@ namespace ProjektStrona_EG_IG.Migrations
                     UzytkownikId = table.Column<int>(type: "int", nullable: false),
                     DataZamowienia = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SzczegolyZamowienia = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Suma = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Suma = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DaneUzytkownika = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -273,8 +274,8 @@ namespace ProjektStrona_EG_IG.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "42dc7a99-01a5-4248-9d1c-4f89757070e3", null, "Admin", "ADMIN" },
-                    { "cac2ae84-915c-495e-9391-3d4731626b8a", null, "User", "USER" }
+                    { "6c6ac88d-5265-4be0-9b75-94cd89b59ddb", null, "User", "USER" },
+                    { "e304d97e-3172-48bd-b602-af216816f2df", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -317,8 +318,8 @@ namespace ProjektStrona_EG_IG.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DaneUzytkownik_UzytkownikId",
-                table: "DaneUzytkownik",
+                name: "IX_DaneUzytkownika_UzytkownikId",
+                table: "DaneUzytkownika",
                 column: "UzytkownikId");
 
             migrationBuilder.CreateIndex(
@@ -361,7 +362,7 @@ namespace ProjektStrona_EG_IG.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "DaneUzytkownik");
+                name: "DaneUzytkownika");
 
             migrationBuilder.DropTable(
                 name: "Koszyk");

@@ -16,7 +16,28 @@ namespace ProjektStrona_EG_IG.Models
         [Required]
         public string Haslo { get; set; }
 
-        //Klucz obcy do AppUser
+        [Required]
+        [MaxLength(25)]
+        public string Imie { get; set; } = "Wprowadź imię";
+
+        [Required]
+        [MaxLength(25)]
+        public string Nazwisko { get; set; } = "Wprowadź nazwisko";
+
+        [Required]
+        [MaxLength(100)]
+        public string Adres { get; set; } = "Wprowadź adres";
+
+        [Required]
+        [MaxLength(10)]
+        [RegularExpression(@"^\d{2}-\d{3}$", ErrorMessage = "Kod pocztowy musi być w formacie XX-XXX.")]
+        public string KodPocztowy { get; set; } = "00-000";
+
+        [Required]
+        [RegularExpression(@"^\d{9}$", ErrorMessage = "Pole musi zawierać dokładnie 9 cyfr.")]
+        public string Telefon { get; set; } = "000000000";
+
+        // Klucz obcy do AppUser
         [ForeignKey("AppUser")]
         public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }

@@ -23,18 +23,19 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Uzytkownik.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Produkt.Nazwa)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ilosc)
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Uzytkownik.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Produkt.Nazwa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ilosc)
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

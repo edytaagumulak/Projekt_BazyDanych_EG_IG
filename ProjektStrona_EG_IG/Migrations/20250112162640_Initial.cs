@@ -61,7 +61,7 @@ namespace ProjektStrona_EG_IG.Migrations
                     ZdjecieUrl = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Nazwa = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Opis = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Cena = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Cena = table.Column<int>(type: "int", nullable: false),
                     IloscDostepna = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -183,6 +183,11 @@ namespace ProjektStrona_EG_IG.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Haslo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Imie = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
+                    Nazwisko = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
+                    Adres = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    KodPocztowy = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Telefon = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -192,29 +197,6 @@ namespace ProjektStrona_EG_IG.Migrations
                         name: "FK_Uzytkownik_AspNetUsers_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DaneUzytkownika",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Imie = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
-                    Nazwisko = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
-                    Adres = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    KodPocztowy = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
-                    UzytkownikId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DaneUzytkownika", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DaneUzytkownika_Uzytkownik_UzytkownikId",
-                        column: x => x.UzytkownikId,
-                        principalTable: "Uzytkownik",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -255,7 +237,9 @@ namespace ProjektStrona_EG_IG.Migrations
                     UzytkownikId = table.Column<int>(type: "int", nullable: false),
                     DataZamowienia = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SzczegolyZamowienia = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DaneOdbiorcy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Suma = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Platnosc = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     DaneUzytkownika = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -274,8 +258,8 @@ namespace ProjektStrona_EG_IG.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "6c6ac88d-5265-4be0-9b75-94cd89b59ddb", null, "User", "USER" },
-                    { "e304d97e-3172-48bd-b602-af216816f2df", null, "Admin", "ADMIN" }
+                    { "11b3da92-6f53-45ac-a50c-8ac886208320", null, "User", "USER" },
+                    { "4e3f5d95-51ab-4d8b-8ca2-c99c0a221838", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -318,11 +302,6 @@ namespace ProjektStrona_EG_IG.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DaneUzytkownika_UzytkownikId",
-                table: "DaneUzytkownika",
-                column: "UzytkownikId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Koszyk_ProduktId",
                 table: "Koszyk",
                 column: "ProduktId");
@@ -360,9 +339,6 @@ namespace ProjektStrona_EG_IG.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
-
-            migrationBuilder.DropTable(
-                name: "DaneUzytkownika");
 
             migrationBuilder.DropTable(
                 name: "Koszyk");

@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using AspNetCoreGeneratedDocument;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -229,11 +230,9 @@ namespace ProjektStrona_EG_IG.Controllers
                 return BadRequest("Wystąpił błąd podczas usuwania pozycji z koszyka.");
             }
         }
-
         [HttpPost]
         public IActionResult Zamow()
         {
-            //Rozpoczęcie transakcji bazy danych
             using var transaction = _context.Database.BeginTransaction();
             try
             {
@@ -243,11 +242,7 @@ namespace ProjektStrona_EG_IG.Controllers
 
                 //Wyszukanie użytkownika w bazie danych
                 var uzytkownik = _context.Uzytkownik.FirstOrDefault(u => u.AppUserId == userId);
-                if (uzytkownik == null) return NotFound("Nie znaleziono użytkownika.");
-
-                var daneUzytkownika = _context.DaneUzytkownika.FirstOrDefault(d => d.UzytkownikId == uzytkownik.Id);
-                if (daneUzytkownika == null || daneUzytkownika.Imie == "Deafult")
-                    return NotFound("Nie znaleziono danych użytkownika.");
+                if (uzytkownik == null || uzytkownik.Imie == "Wprowadź imię" || uzytkownik.Nazwisko == "Wprowadź nazwisko" || uzytkownik.Adres == "Wprowadź adres" || uzytkownik.KodPocztowy == "00-000") return NotFound("Nie znaleziono danych użytkownika.");
 
                 //Pobieranie koszyka użytkownika
                 var koszyk = _context.Koszyk
@@ -255,17 +250,14 @@ namespace ProjektStrona_EG_IG.Controllers
                     .Include(k => k.Produkt)
                     .ToList();
 
-                //W przypadku, gdy koszyk jest pusty zwróci komunikat
                 if (!koszyk.Any()) return BadRequest("Koszyk jest pusty.");
 
-                //Oblicza sumę zamówienia
+                //Obliczenie sumy zamówienia
                 decimal sumaZamowienia = koszyk.Sum(k => k.Ilosc * k.Produkt.Cena);
 
                 //Przygotowanie szczegółów zamówienia
-                var szczegoly = string.Join(", ", koszyk.Select(k => $"{k.Produkt.Nazwa} x{k.Ilosc}"));
-
-                var daneUzytkownikaTekst = $"{daneUzytkownika.Imie} {daneUzytkownika.Nazwisko}, " +
-                                           $"{daneUzytkownika.Adres}, {daneUzytkownika.KodPocztowy}";
+                var szczegoly = string.Join(", ", koszyk.Select(k => $"{k.Produkt.Nazwa}, Ilość: {k.Ilosc}"));
+                var daneOdbiorcy = $"{uzytkownik.Imie} {uzytkownik.Nazwisko}, {uzytkownik.Adres}, {uzytkownik.KodPocztowy}, {uzytkownik.Telefon}";
 
                 //Utworzenie nowego zamówienia
                 var zamowienie = new Zamowienie
@@ -273,11 +265,12 @@ namespace ProjektStrona_EG_IG.Controllers
                     UzytkownikId = uzytkownik.Id,
                     DataZamowienia = DateTime.Now,
                     SzczegolyZamowienia = szczegoly,
+                    DaneOdbiorcy = daneOdbiorcy,
                     Suma = sumaZamowienia,
-                    DaneUzytkownika = daneUzytkownikaTekst
+                    DaneUzytkownika = daneOdbiorcy,
+                    Platnosc = "Płatność przy odbiorze"
                 };
 
-                //Dodanie nowego zamówienia do bazy
                 _context.Zamowienia.Add(zamowienie);
 
                 //Usunięcie pozycji koszyka
@@ -293,6 +286,7 @@ namespace ProjektStrona_EG_IG.Controllers
                 return BadRequest("Wystąpił błąd podczas realizacji zamówienia.");
             }
         }
+
         [Authorize(Roles = "Admin")]
         public ActionResult ZamowieniaAdmin()
         {
@@ -333,6 +327,58 @@ namespace ProjektStrona_EG_IG.Controllers
                 .ToList();
 
             return View(zamowienia);
+        }
+        public ActionResult DaneUzytkownika()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; //Pobiera ID zalogowanego użytkownika
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var uzytkownik = _context.Uzytkownik.FirstOrDefault(u => u.AppUserId == userId);
+            if (uzytkownik == null)
+            {
+                return NotFound("Użytkownik nie został znaleziony.");
+            }
+
+            return View(uzytkownik);
+        }
+
+        //POST: ProduktController/DaneUzytkownika
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DaneUzytkownika(Uzytkownik model)
+        {
+            try
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (userId == null)
+                {
+                    return Unauthorized();
+                }
+
+                var uzytkownik = _context.Uzytkownik.FirstOrDefault(u => u.AppUserId == userId);
+                if (uzytkownik == null)
+                {
+                    return NotFound("Użytkownik nie został znaleziony.");
+                }
+
+                //Aktualizacja danych użytkownika
+                uzytkownik.Imie = model.Imie;
+                uzytkownik.Nazwisko = model.Nazwisko;
+                uzytkownik.Adres = model.Adres;
+                uzytkownik.KodPocztowy = model.KodPocztowy;
+                uzytkownik.Telefon = model.Telefon;
+
+                _context.SaveChanges(); //Zapis zmian w bazie danych
+
+                return RedirectToAction(nameof(Index)); //Powrót na stronę główną lub inną
+            }
+            catch
+            {
+                return View(model); //W przypadku błędu zwróć formularz z danymi
+            }
         }
 
     }

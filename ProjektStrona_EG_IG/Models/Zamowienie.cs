@@ -20,7 +20,14 @@ namespace ProjektStrona_EG_IG.Models
         public string SzczegolyZamowienia { get; set; }
 
         [Required]
+        public string DaneOdbiorcy { get; set; }
+
+        [Required]
         public decimal Suma { get; set; }
+       
+        [Required]
+        [MaxLength(50)]
+        public string Platnosc { get; set; } = "Płatność przy odbiorze";
 
         [Required]
         public string DaneUzytkownika { get; set; } // Kolumna w bazie danych

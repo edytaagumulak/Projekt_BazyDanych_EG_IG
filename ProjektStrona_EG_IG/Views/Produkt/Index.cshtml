@@ -1,29 +1,66 @@
 ﻿@model IEnumerable<ProjektStrona_EG_IG.Models.Produkt>
+<style>
 
+    body {
+        background: linear-gradient(120deg, #fefcea, #f1daff, #d6f6ff, #ffe5d9);
+        background-size: 400% 400%;
+        animation: gradientAnimation 15s ease infinite;
+        color: #333;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    tr th{
+        text-align:center;
+        max-width:200px;
+        font-size:20px;
+        font-style:italic;
+        font-family: Century Gothic;
+    }
+    tr td{
+        max-width: 200px;
+        height:150px;
+        max-height: 150px;
+        color: midnightblue;
+        font-style:bold;
+        font-size:18px;
+        font-family: CityBlueprint;
+    }
+    #zdjecie{
+        height:145px;
+        width:145px;
+        border:solid 2px grey;
+        border-radius:15px;
+    }
+    .srodkowanie{
+        line-height:135px;
+        text-align:center;
+    }
+    h1{
+        font-family: Kristen ITC;
+        text-align:center;
+        font-size:50px;
+        padding-top:30px;
+        padding-bottom:40px;
+        text-shadow: 3px 3px 5px grey;
+    }
+</style>
 @{
     ViewData["Title"] = "Lista Produktów";
 }
 
-<h1 style="color:aqua;">Lista Produktów</h1>
-
-<!--Sprawdza, czy użytkownik jest adminem-->
-@if (User.IsInRole("Admin"))
-{
-    <p>
-        <a asp-action="Create" style="display: inline-block;padding: 10px 20px;background-color: #5F9BD1;color: white;text-decoration: none;border-radius: 5px;border: 2px solid #5F9BD1;font-size: 16px;font-weight: bold;text-align: center;transition: background-color 0.3s, border-color 0.3s;">Dodaj Produkt</a>
-    </p>
-}
+<h1>Nasze Produkty</h1>
 
 <!--Lista produktów dostępnych w sklepie-->
 <table class="table">
     <thead>
         <tr>
-            <th>Zdjęcie</th>
+            <th >Zdjęcie</th>
             <th>Nazwa Produktu</th>
-            <th>@Html.DisplayNameFor(model => model.Opis)</th>
-            <th>@Html.DisplayNameFor(model => model.Cena)</th>
-            <th>Ilość do kupienia</th>
+            <th>Opis</th>
+            <th>Cena</th>
             <th>Dostępna Ilość</th>
+            <th>Ilość do kupienia</th>
             @if (User.IsInRole("Admin"))
             {
                 <th>Zarządzaj</th>
@@ -34,32 +71,40 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    <img src="@item.ZdjecieUrl" alt="@item.Nazwa" style="max-width: 100px; max-height: 100px;" />
+                <td class="srodkowanie">
+                    <img src="@item.ZdjecieUrl" alt="@item.Nazwa" id="zdjecie" />
                 </td>
-                <td>@Html.DisplayFor(modelItem => item.Nazwa)</td>
+                <td class="srodkowanie">@Html.DisplayFor(modelItem => item.Nazwa)</td>
                 <td>@Html.DisplayFor(modelItem => item.Opis)</td>
-                <td>@Html.DisplayFor(modelItem => item.Cena)</td>
-                <td>
+                <td class="srodkowanie">@Html.DisplayFor(modelItem => item.Cena) zł</td>
+                <td class="srodkowanie">@Html.DisplayFor(modelItem => item.IloscDostepna)</td>
+                <td style="padding-top:56px;max-width:50px;">
                     <!--Dodawanie produktu do koszyka (przeniesienie produktu po id do akcji w kontrolerze)-->
                     <form asp-action="AddToKoszyk" method="post">
                         <input type="hidden" name="produktId" value="@item.Id" />
-                        <input type="number" name="ilosc" min="1" max="@item.IloscDostepna" value="0" class="form-control" style="width: 80px;" />
+                        <input type="number" name="ilosc" min="1" max="@item.IloscDostepna" value="0" class="form-control" style="width: 80px;float:left;height:40px;" />
                         <!--Przycisk wykonujący akcję-->
-                        <button type="submit" class="btn btn-primary btn-sm">Dodaj do koszyka</button>
+                        <button type="submit" class="btn btn-primary btn-sm" style="float:right;height:40px;background-color:rgb(208,135,169);color:black;border:solid 1px black;">Dodaj do koszyka</button>
                     </form>
                 </td>
-                <td>@Html.DisplayFor(modelItem => item.IloscDostepna)</td>
                 @if (User.IsInRole("Admin"))
                 {
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edytuj</a>
+                    <td class="srodkowanie">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm" style="background-color:RGB(202,158,205);border:1px solid black;height:40px;line-height:30px;">Edytuj</a>
                         <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
+                            <button type="submit" class="btn btn-danger btn-sm" style="background-color:rgb(220, 113, 113);border:1px solid black; color:black;height:40px">Usuń</button>
                         </form>
                     </td>
                 }
             </tr>
+
         }
     </tbody>
 </table>
+<!--Sprawdza, czy użytkownik jest adminem-->
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="Create" style="display: inline-block;padding: 10px 20px;background-color:rgb(208,135,169);color:black;text-decoration: none;border-radius: 5px;border: 2px solid black;font-size: 16px;font-weight: bold;text-align: center;transition: background-color 0.3s, border-color 0.3s;float: right;">Dodaj Produkt</a>
+    </p>
+}

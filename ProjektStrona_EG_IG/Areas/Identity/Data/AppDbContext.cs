@@ -15,7 +15,6 @@ public class AppDbContext : IdentityDbContext<AppUser>
     //DbSet<T> umożliwia wykonywanie operacji CRUD na danych w tabelach odpowiadających encjom:
     public DbSet<Produkt> Produkt { get; set; }
     public DbSet<Uzytkownik> Uzytkownik { get; set; }
-    public DbSet<DaneUzytkownika> DaneUzytkownika { get; set; }
     public DbSet<Koszyk> Koszyk { get; set; }
     public DbSet<Zamowienie> Zamowienia { get; set; }
 

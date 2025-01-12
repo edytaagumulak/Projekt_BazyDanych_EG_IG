@@ -1,17 +1,15 @@
 ﻿@model IEnumerable<ProjektStrona_EG_IG.Models.Zamowienie>
 
 @{
-    ViewData["Title"] = "Zamówienia - Admin";
+    ViewData["Title"] = "Historia Zamówień - Admin";
 }
 
-<h1>Zamówienia</h1>
-<!--Sprawdza, czy model jest pusty-->
+<h1>Historia Zamówień</h1>
+
 @if (!Model.Any())
 {
-    <p>Nie ma żadnych zamówień.</p>
+    <p>Brak zamówień do wyświetlenia.</p>
 }
-
-//Tabela tworząca i wyświetlająca listę wszystkich zamówień użytkowników
 else
 {
     <table class="table">
@@ -21,6 +19,8 @@ else
                 <th>Użytkownik</th>
                 <th>Szczegóły Zamówienia</th>
                 <th>Suma</th>
+                <th>Płatność</th>
+                <th>Dane Użytkownika</th>
             </tr>
         </thead>
         <tbody>
@@ -28,9 +28,13 @@ else
             {
                 <tr>
                     <td>@zamowienie.DataZamowienia.ToString("dd-MM-yyyy HH:mm")</td>
-                    <td>@zamowienie.Uzytkownik?.Email</td>
+                    <td>@zamowienie.Uzytkownik.Email</td>
                     <td>@zamowienie.SzczegolyZamowienia</td>
                     <td>@zamowienie.Suma zł</td>
+                    <td>@zamowienie.Platnosc</td>
+                    <td>
+                        @zamowienie.DaneUzytkownika
+                    </td>
                 </tr>
             }
         </tbody>

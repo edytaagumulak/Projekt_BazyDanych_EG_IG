@@ -12,7 +12,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Produkt" asp-action="Index">Kosmoteria</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Produkt" asp-action="Index"><b>Kosmoteria</b></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -22,25 +22,25 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Produkt" asp-action="Koszyk">Koszyk</a>
                         </li>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Produkt" asp-action="ZamowieniaAdmin">Koszyki Klientów</a>
-                            </li>
-                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Produkt" asp-action="HistoriaTransakcji">Zamówienia</a>
                         </li>
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Produkt" asp-action="HistoriaAdmin">Spis Zamówień</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Produkt" asp-action="ZamowieniaAdmin">Koszyki Klientów</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Produkt" asp-action="HistoriaAdmin">Zamówienia Klientów</a>
                             </li>
                         }
                     </ul>
                 </div>
                 <div class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Produkt" asp-action="DodajDaneUzytkownika">Dane Użytkownika</a>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Produkt" asp-action="DaneUzytkownika">Dane Użytkownika</a>
                 </div>
                 <partial name="_LoginPartial" />
             </div>
@@ -54,7 +54,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - ProjektStrona_EG_IG - <a asp-area="" asp-controller="Produkt" asp-action="Koszyk">Koszyk</a>
+            &copy; 2025 - Kosmoteria by Edyta Gumulak & Iza Grzyb
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

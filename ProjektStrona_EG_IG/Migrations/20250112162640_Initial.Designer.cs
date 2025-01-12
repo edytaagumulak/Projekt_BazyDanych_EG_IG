@@ -12,7 +12,7 @@ using ProjektStrona_EG_IG.Areas.Identity.Data;
 namespace ProjektStrona_EG_IG.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250109180237_Initial")]
+    [Migration("20250112162640_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -24,44 +24,6 @@ namespace ProjektStrona_EG_IG.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("DaneUzytkownika", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Adres")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Imie")
-                        .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
-
-                    b.Property<string>("KodPocztowy")
-                        .IsRequired()
-                        .HasMaxLength(6)
-                        .HasColumnType("nvarchar(6)");
-
-                    b.Property<string>("Nazwisko")
-                        .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
-
-                    b.Property<int>("UzytkownikId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UzytkownikId");
-
-                    b.ToTable("DaneUzytkownika");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -92,13 +54,13 @@ namespace ProjektStrona_EG_IG.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e304d97e-3172-48bd-b602-af216816f2df",
+                            Id = "4e3f5d95-51ab-4d8b-8ca2-c99c0a221838",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "6c6ac88d-5265-4be0-9b75-94cd89b59ddb",
+                            Id = "11b3da92-6f53-45ac-a50c-8ac886208320",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -313,8 +275,8 @@ namespace ProjektStrona_EG_IG.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Cena")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Cena")
+                        .HasColumnType("int");
 
                     b.Property<int>("IloscDostepna")
                         .HasColumnType("int");
@@ -347,6 +309,11 @@ namespace ProjektStrona_EG_IG.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Adres")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("AppUserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -357,6 +324,25 @@ namespace ProjektStrona_EG_IG.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Haslo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Imie")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
+
+                    b.Property<string>("KodPocztowy")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Nazwisko")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
+
+                    b.Property<string>("Telefon")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -375,12 +361,21 @@ namespace ProjektStrona_EG_IG.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("DaneOdbiorcy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("DaneUzytkownika")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DataZamowienia")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Platnosc")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("Suma")
                         .HasColumnType("decimal(18,2)");
@@ -397,17 +392,6 @@ namespace ProjektStrona_EG_IG.Migrations
                     b.HasIndex("UzytkownikId");
 
                     b.ToTable("Zamowienia");
-                });
-
-            modelBuilder.Entity("DaneUzytkownika", b =>
-                {
-                    b.HasOne("ProjektStrona_EG_IG.Models.Uzytkownik", "Uzytkownik")
-                        .WithMany()
-                        .HasForeignKey("UzytkownikId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Uzytkownik");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

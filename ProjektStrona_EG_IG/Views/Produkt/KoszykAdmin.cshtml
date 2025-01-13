@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ProjektStrona_EG_IG.Models.Zamowienie>
+﻿@model IEnumerable<ProjektStrona_EG_IG.Models.Koszyk>
 <style>
 
     body {
@@ -52,44 +52,37 @@
     p {
         font-size: 30px;
         font-family: Century Gothic;
-        text-align:center;
     }
 </style>
 @{
-    ViewData["Title"] = "Historia Zamówień";
+    ViewData["Title"] = "KoszykAdmin";
 }
 
-<h1>Historia Zamowien</h1>
+<h1>Koszyki Uzytkownikow - Panel Admina</h1>
 <!--Sprawdza, czy model jest pusty-->
 @if (!Model.Any())
 {
-    <p>Zapraszamy najpierw do zrobienia zakupów</p>
+    <p>Klienci nie mają nic w koszykach</p>
 }
-else
-{
-    <table class="table">
-        <thead>
+else{
+<!--Tabela ze spisem zawartości koszyków wszystkich użytkowników-->
+<table class="table">
+    <thead>
+        <tr>
+            <th>E-Mail Użytkownika</th>
+            <th>Nazwa Produktów</th>
+            <th>Ilość Produktów</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
             <tr>
-                <th>Data Zamówienia</th>
-                <th>E-Mail</th>
-                <th>Szczegóły Zamówienia</th>
-                <th>Suma</th>
-                <th>Płatność</th>
-                <th>Dane Użytkownika</th>
+                <td class="srodkowanie">@Html.DisplayFor(modelItem => item.Uzytkownik.Email)</td>
+                <td class="srodkowanie">@Html.DisplayFor(modelItem => item.Produkt.Nazwa)</td>
+                <td class="srodkowanie">@Html.DisplayFor(modelItem => item.Ilosc)</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var zamowienie in Model)
-            {
-                <tr>
-                    <td class="srodkowanie">@zamowienie.DataZamowienia.ToString("dd-MM-yyyy HH:mm")</td>
-                    <td class="srodkowanie">@zamowienie.Uzytkownik.Email</td>
-                    <td>@zamowienie.SzczegolyZamowienia</td>
-                    <td class="srodkowanie">@zamowienie.Suma zł</td>
-                    <td class="srodkowanie">@zamowienie.Platnosc</td>
-                    <td>@zamowienie.DaneUzytkownika</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
 }

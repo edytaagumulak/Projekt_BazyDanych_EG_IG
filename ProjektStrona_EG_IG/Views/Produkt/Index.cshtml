@@ -22,7 +22,6 @@
         height:150px;
         max-height: 150px;
         color: midnightblue;
-        font-style:bold;
         font-size:18px;
         font-family: CityBlueprint;
     }
@@ -50,9 +49,16 @@
 }
 
 <h1>Nasze Produkty</h1>
+<!--Sprawdza, czy użytkownik jest adminem-->
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="Create" style="display: inline-block;padding: 10px 20px;background-color:rgb(208,135,169);color:black;text-decoration: none;border-radius: 5px;border: 2px solid black;font-size: 16px;font-weight: bold;text-align: center;transition: background-color 0.3s, border-color 0.3s;float: right;margin-top:-100px;">Dodaj Produkt</a>
+    </p>
+}
 
 <!--Lista produktów dostępnych w sklepie-->
-<table class="table">
+<table class="table" style="margin-bottom:100px;">
     <thead>
         <tr>
             <th >Zdjęcie</th>
@@ -72,17 +78,17 @@
         {
             <tr>
                 <td class="srodkowanie">
-                    <img src="@item.ZdjecieUrl" alt="@item.Nazwa" id="zdjecie" />
+                    <img src="@item.ZdjecieUrl" alt="Brak zdjęcia" id="zdjecie" height="145px" width="145px" />
                 </td>
                 <td class="srodkowanie">@Html.DisplayFor(modelItem => item.Nazwa)</td>
                 <td>@Html.DisplayFor(modelItem => item.Opis)</td>
                 <td class="srodkowanie">@Html.DisplayFor(modelItem => item.Cena) zł</td>
                 <td class="srodkowanie">@Html.DisplayFor(modelItem => item.IloscDostepna)</td>
-                <td style="padding-top:56px;max-width:50px;">
+                <td style="padding-top:57px;max-width:50px;">
                     <!--Dodawanie produktu do koszyka (przeniesienie produktu po id do akcji w kontrolerze)-->
                     <form asp-action="AddToKoszyk" method="post">
                         <input type="hidden" name="produktId" value="@item.Id" />
-                        <input type="number" name="ilosc" min="1" max="@item.IloscDostepna" value="0" class="form-control" style="width: 80px;float:left;height:40px;" />
+                        <input type="number" name="ilosc" min="1" max="@item.IloscDostepna" value="0" class="form-control" style="width: 80px;float:left;height:40px;background-color:lightpink;" />
                         <!--Przycisk wykonujący akcję-->
                         <button type="submit" class="btn btn-primary btn-sm" style="float:right;height:40px;background-color:rgb(208,135,169);color:black;border:solid 1px black;">Dodaj do koszyka</button>
                     </form>
@@ -101,10 +107,3 @@
         }
     </tbody>
 </table>
-<!--Sprawdza, czy użytkownik jest adminem-->
-@if (User.IsInRole("Admin"))
-{
-    <p>
-        <a asp-action="Create" style="display: inline-block;padding: 10px 20px;background-color:rgb(208,135,169);color:black;text-decoration: none;border-radius: 5px;border: 2px solid black;font-size: 16px;font-weight: bold;text-align: center;transition: background-color 0.3s, border-color 0.3s;float: right;">Dodaj Produkt</a>
-    </p>
-}

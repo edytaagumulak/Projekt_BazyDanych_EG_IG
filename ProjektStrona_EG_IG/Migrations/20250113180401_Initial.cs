@@ -258,8 +258,8 @@ namespace ProjektStrona_EG_IG.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "11b3da92-6f53-45ac-a50c-8ac886208320", null, "User", "USER" },
-                    { "4e3f5d95-51ab-4d8b-8ca2-c99c0a221838", null, "Admin", "ADMIN" }
+                    { "06e53ef5-79c5-41b4-b6ed-7655cadba418", null, "User", "USER" },
+                    { "222a827b-e7b1-4746-879e-b423389672b2", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(

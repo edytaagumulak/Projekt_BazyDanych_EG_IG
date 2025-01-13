@@ -1,13 +1,58 @@
 ﻿@model ProjektStrona_EG_IG.Models.Produkt
+<style>
 
-<h1>Usuń Produkt</h1>
+    body {
+        background: linear-gradient(120deg, #fefcea, #f1daff, #d6f6ff, #ffe5d9);
+        background-size: 400% 400%;
+        animation: gradientAnimation 15s ease infinite;
+        color: #333;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        font-family: Kristen ITC;
+        text-align: center;
+        font-size: 50px;
+        padding-top: 30px;
+        padding-bottom: 40px;
+        text-shadow: 3px 3px 5px grey;
+    }
+
+    h4 {
+        font-size: 25px;
+        font-family: Century Gothic;
+        font-style: italic;
+    }
+    p{
+        font-size: 30px;
+        margin-bottom:-15px;
+    }
+    .przycisk {
+        display: inline-block;
+        padding: 10px 20px;
+        margin-top: 30px;
+        background-color: rgb(208,135,169);
+        color: black;
+        text-decoration: none;
+        border-radius: 5px;
+        border: 2px solid black;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+</style>
+<h1>Usun Produkt</h1>
 
 <div>
     <h4>Na pewno chcesz usunąć ten produkt?</h4>
-    <p><strong>@Model.Nazwa</strong></p>
+    <p>@Model.Nazwa</p>
     <form asp-action="DeleteConfirmed" method="post">
         <input type="hidden" asp-for="Id" />
-        <button type="submit" class="btn btn-danger">Usuń</button>
-        <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+        <button type="submit" style="background-color:rgb(220, 113, 113)" class="btn btn-danger przycisk">Usuń</button>
+        <a asp-action="Index" class="btn btn-secondary przycisk">Anuluj</a>
     </form>
 </div>

@@ -12,7 +12,7 @@ using ProjektStrona_EG_IG.Areas.Identity.Data;
 namespace ProjektStrona_EG_IG.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250112162640_Initial")]
+    [Migration("20250113180401_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -54,13 +54,13 @@ namespace ProjektStrona_EG_IG.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "4e3f5d95-51ab-4d8b-8ca2-c99c0a221838",
+                            Id = "222a827b-e7b1-4746-879e-b423389672b2",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "11b3da92-6f53-45ac-a50c-8ac886208320",
+                            Id = "06e53ef5-79c5-41b4-b6ed-7655cadba418",
                             Name = "User",
                             NormalizedName = "USER"
                         });

@@ -1,5 +1,60 @@
 ﻿@model IEnumerable<ProjektStrona_EG_IG.Models.Koszyk>
+<style>
 
+    body {
+        background: linear-gradient(120deg, #fefcea, #f1daff, #d6f6ff, #ffe5d9);
+        background-size: 400% 400%;
+        animation: gradientAnimation 15s ease infinite;
+        color: #333;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    tr th {
+        text-align: center;
+        max-width: 200px;
+        font-size: 20px;
+        font-style: italic;
+        font-family: Century Gothic;
+    }
+
+    tr td {
+        max-width: 200px;
+        height: 150px;
+        max-height: 150px;
+        color: midnightblue;
+        font-size: 18px;
+        font-family: CityBlueprint;
+    }
+
+    #zdjecie {
+        height: 145px;
+        width: 145px;
+        border: solid 2px grey;
+        border-radius: 15px;
+    }
+
+    .srodkowanie {
+        line-height: 135px;
+        text-align: center;
+    }
+
+    h1 {
+        font-family: Kristen ITC;
+        text-align: center;
+        font-size: 50px;
+        padding-top: 30px;
+        padding-bottom: 40px;
+        text-shadow: 3px 3px 5px grey;
+    }
+
+    p {
+        font-size: 30px;
+        font-family: Century Gothic;
+        text-align:center;
+    }
+</style>
 @{
     ViewData["Title"] = "Koszyk";
 }
@@ -9,7 +64,7 @@
 <!--Sprawdza, czy model jest pusty-->
 @if (!Model.Any())
 {
-    <p>Twój koszyk jest pusty.</p>
+    <p>Twój koszyk jest pusty</p>
 }
 else
 {
@@ -17,28 +72,28 @@ else
         <thead>
             <tr>
                 <th>Zdjęcie</th>
-                <th>Nazwa</th>
-                <th>Ilość</th>
+                <th>Nazwa Produktu</th>
+                <th>Ilość Produktów</th>
                 <th>Cena</th>
-                <th>Akcje</th>
+                <th>Zarządzaj</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>
-                        <img src="@item.ZdjecieUrl" alt="@item.Produkt.Nazwa" style="max-width: 100px; max-height: 100px;" />
+                    <td class="srodkowanie">
+                        <img src="@item.ZdjecieUrl"  id="zdjecie" alt="Brak zdjęcia" height="145px" width="145px" />
                     </td>
-                    <td>@item.Produkt.Nazwa</td>
-                    <td>@item.Ilosc</td>
-                    <td>@(item.Ilosc * item.Produkt.Cena) zł</td>
-                    <td>
+                    <td class="srodkowanie">@item.Produkt.Nazwa</td>
+                    <td class="srodkowanie">@item.Ilosc</td>
+                    <td class="srodkowanie">@(item.Ilosc * item.Produkt.Cena) zł</td>
+                    <td class="srodkowanie">
                         <!--Usuwanie produktów z koszyka (przesyłanie po id produktu do akcji w kontrolerze)-->
                         <form asp-action="RemoveFromKoszyk" method="post">
                             <input type="hidden" name="koszykId" value="@item.Id" />
                             <!--Przycisk wykonujący akcję-->
-                            <button type="submit" class="btn btn-danger">Usuń</button>
+                            <button type="submit" class="btn btn-danger" style="background-color:rgb(220, 113, 113);border:1px solid black; color:black;height:40px">Usuń</button>
                         </form>
                     </td>
                 </tr>
@@ -48,7 +103,7 @@ else
     <!--Zamawianie produktu (przesyłanie po id produktu do akcji w kontrolerze)-->
     <form asp-action="Zamow" method="post">
         <!--Przycisk do wykonania akcji-->
-        <button type="submit" class="btn btn-primary">Zamów teraz</button>
+        <button type="submit" class="btn btn-primary" style="display: inline-block;padding: 10px 20px;background-color:rgb(208,135,169);color:black;text-decoration: none;border-radius: 5px;border: 2px solid black;font-size: 16px;font-weight: bold;text-align: center;transition: background-color 0.3s, border-color 0.3s;float: right;">Zamów teraz</button>
     </form>
     
 }

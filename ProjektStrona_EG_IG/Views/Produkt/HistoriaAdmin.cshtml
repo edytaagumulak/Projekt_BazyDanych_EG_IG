@@ -1,14 +1,69 @@
 ﻿@model IEnumerable<ProjektStrona_EG_IG.Models.Zamowienie>
+<style>
 
+    body {
+        background: linear-gradient(120deg, #fefcea, #f1daff, #d6f6ff, #ffe5d9);
+        background-size: 400% 400%;
+        animation: gradientAnimation 15s ease infinite;
+        color: #333;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    tr th {
+        text-align: center;
+        max-width: 200px;
+        font-size: 20px;
+        font-style: italic;
+        font-family: Century Gothic;
+    }
+
+    tr td {
+        max-width: 200px;
+        height: 150px;
+        max-height: 150px;
+        color: midnightblue;
+        font-size: 18px;
+        font-family: CityBlueprint;
+    }
+
+    #zdjecie {
+        height: 145px;
+        width: 145px;
+        border: solid 2px grey;
+        border-radius: 15px;
+    }
+
+    .srodkowanie {
+        line-height: 135px;
+        text-align: center;
+    }
+
+    h1 {
+        font-family: Kristen ITC;
+        text-align: center;
+        font-size: 50px;
+        padding-top: 30px;
+        padding-bottom: 40px;
+        text-shadow: 3px 3px 5px grey;
+    }
+
+    p {
+        font-size: 30px;
+        font-family: Century Gothic;
+        text-align:center;
+    }
+</style>
 @{
     ViewData["Title"] = "Historia Zamówień - Admin";
 }
 
-<h1>Historia Zamówień</h1>
-
+<h1>Historia Zamowien Uzytkownikow - Panel Admina</h1>
+<!--Sprawdza, czy model jest pusty-->
 @if (!Model.Any())
 {
-    <p>Brak zamówień do wyświetlenia.</p>
+    <p>Brak zamówień do wyświetlenia</p>
 }
 else
 {
@@ -16,7 +71,7 @@ else
         <thead>
             <tr>
                 <th>Data Zamówienia</th>
-                <th>Użytkownik</th>
+                <th>E-Mail</th>
                 <th>Szczegóły Zamówienia</th>
                 <th>Suma</th>
                 <th>Płatność</th>
@@ -27,11 +82,11 @@ else
             @foreach (var zamowienie in Model)
             {
                 <tr>
-                    <td>@zamowienie.DataZamowienia.ToString("dd-MM-yyyy HH:mm")</td>
-                    <td>@zamowienie.Uzytkownik.Email</td>
+                    <td class="srodkowanie">@zamowienie.DataZamowienia.ToString("dd-MM-yyyy HH:mm")</td>
+                    <td class="srodkowanie">@zamowienie.Uzytkownik.Email</td>
                     <td>@zamowienie.SzczegolyZamowienia</td>
-                    <td>@zamowienie.Suma zł</td>
-                    <td>@zamowienie.Platnosc</td>
+                    <td class="srodkowanie">@zamowienie.Suma zł</td>
+                    <td class="srodkowanie">@zamowienie.Platnosc</td>
                     <td>
                         @zamowienie.DaneUzytkownika
                     </td>

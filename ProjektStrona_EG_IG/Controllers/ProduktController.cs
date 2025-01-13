@@ -128,7 +128,7 @@ namespace ProjektStrona_EG_IG.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; //Pobiera ID zalogowanego użytkownika
             if (userId == null) //Brak autoryzacji jeżeli ID jest puste
             {
-                return Unauthorized();
+                return View("Error1");
             }
 
             var koszyki = _context.Koszyk //odwołanie do tabeli Koszyk w bazie
@@ -155,7 +155,7 @@ namespace ProjektStrona_EG_IG.Controllers
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; //Pobiera ID zalogowanego użytkownika
                 if (userId == null)  //Brak autoryzacji jeżeli ID jest puste
                 {
-                    return Unauthorized();
+                    return View("Error1");
                 }
 
                 //Wyszukanie użytkownika w bazie danych (AppUserId)
@@ -192,7 +192,7 @@ namespace ProjektStrona_EG_IG.Controllers
                 }
 
                 _context.SaveChanges(); //Zapisanie zmian
-                return RedirectToAction(nameof(Koszyk));
+                return RedirectToAction(nameof(Index));
             }
             catch
             {
@@ -242,7 +242,7 @@ namespace ProjektStrona_EG_IG.Controllers
 
                 //Wyszukanie użytkownika w bazie danych
                 var uzytkownik = _context.Uzytkownik.FirstOrDefault(u => u.AppUserId == userId);
-                if (uzytkownik == null || uzytkownik.Imie == "Wprowadź imię" || uzytkownik.Nazwisko == "Wprowadź nazwisko" || uzytkownik.Adres == "Wprowadź adres" || uzytkownik.KodPocztowy == "00-000") return NotFound("Nie znaleziono danych użytkownika.");
+                if (uzytkownik == null || uzytkownik.Imie == "Wprowadź imię" || uzytkownik.Nazwisko == "Wprowadź nazwisko" || uzytkownik.Adres == "Wprowadź adres" || uzytkownik.KodPocztowy == "00-000") return View("Error2");
 
                 //Pobieranie koszyka użytkownika
                 var koszyk = _context.Koszyk
@@ -257,7 +257,7 @@ namespace ProjektStrona_EG_IG.Controllers
 
                 //Przygotowanie szczegółów zamówienia
                 var szczegoly = string.Join(", ", koszyk.Select(k => $"{k.Produkt.Nazwa}, Ilość: {k.Ilosc}"));
-                var daneOdbiorcy = $"{uzytkownik.Imie} {uzytkownik.Nazwisko}, {uzytkownik.Adres}, {uzytkownik.KodPocztowy}, {uzytkownik.Telefon}";
+                var daneOdbiorcy = $"Imię i Nazwisko: {uzytkownik.Imie} {uzytkownik.Nazwisko}, Adres: {uzytkownik.Adres}, Kod Pocztowy: {uzytkownik.KodPocztowy}, Telefon {uzytkownik.Telefon}";
 
                 //Utworzenie nowego zamówienia
                 var zamowienie = new Zamowienie
@@ -288,7 +288,7 @@ namespace ProjektStrona_EG_IG.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public ActionResult ZamowieniaAdmin()
+        public ActionResult KoszykAdmin()
         {
             var zamowienia = _context.Koszyk //odwołanie do tabeli Koszyk w bazie
                 .Include(k => k.Uzytkownik) //Spis wszystkich zamówień
@@ -302,7 +302,7 @@ namespace ProjektStrona_EG_IG.Controllers
         {
             //Pobranie ID zalogowanego użytkownika
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null) return Unauthorized();
+            if (userId == null) return View("Error1");
 
             //Wyszukanie użytkownika w bazie po ID
             var uzytkownik = _context.Uzytkownik.FirstOrDefault(u => u.AppUserId == userId);
@@ -333,7 +333,7 @@ namespace ProjektStrona_EG_IG.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; //Pobiera ID zalogowanego użytkownika
             if (userId == null)
             {
-                return Unauthorized();
+                return View("Error1");
             }
 
             var uzytkownik = _context.Uzytkownik.FirstOrDefault(u => u.AppUserId == userId);

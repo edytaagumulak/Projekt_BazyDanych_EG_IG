@@ -1,51 +1,88 @@
 ﻿@model ProjektStrona_EG_IG.Models.Produkt
+<style>
 
+    body {
+        background: linear-gradient(120deg, #fefcea, #f1daff, #d6f6ff, #ffe5d9);
+        background-size: 400% 400%;
+        animation: gradientAnimation 15s ease infinite;
+        color: #333;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    h1 {
+        font-family: Kristen ITC;
+        text-align: center;
+        font-size: 50px;
+        padding-top: 30px;
+        padding-bottom: 40px;
+        text-shadow: 3px 3px 5px grey;
+    }
+    .color{
+        background-color:lightpink;
+        padding:10px;
+    }
+    div label{
+        font-size:25px;
+        font-family: Century Gothic;
+        font-style: italic;
+    }
+    #przycisk{
+        display: inline-block;
+        padding: 10px 20px;
+        margin-top:30px;
+        background-color: rgb(208,135,169);
+        color: black;
+        text-decoration: none;
+        border-radius: 5px;
+        border: 2px solid black;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+</style>
 @{
     ViewData["Title"] = "Create";
 }
 
 <h1>Dodaj Produkt</h1>
-
-<h4>Produkt</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Nazwa" class="control-label"></label>
-                <input asp-for="Nazwa" class="form-control" />
+                <label asp-for="Nazwa" class="control-label">Nazwa Produktu</label>
+                <input asp-for="Nazwa" class="form-control color" placeholder="Podaj nazwę produktu" />
                 <span asp-validation-for="Nazwa" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Opis" class="control-label"></label>
-                <input asp-for="Opis" class="form-control" />
+                <label asp-for="Opis" class="control-label">Opis produktu</label>
+                <input asp-for="Opis" class="form-control color" placeholder="Podaj opis produktu" />
                 <span asp-validation-for="Opis" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Cena" class="control-label"></label>
-                <input asp-for="Cena" class="form-control" />
+                <label asp-for="Cena" class="control-label">Cena produktu</label>
+                <input asp-for="Cena" class="form-control color" placeholder="Podaj cenę produktu w zł" />
                 <span asp-validation-for="Cena" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IloscDostepna" class="control-label"></label>
-                <input asp-for="IloscDostepna" class="form-control" />
+                <label asp-for="IloscDostepna" class="control-label">Ilość dostępna produktu</label>
+                <input asp-for="IloscDostepna" class="form-control color" placeholder="Podaj dostępną ilość produktu" />
                 <span asp-validation-for="IloscDostepna" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ZdjecieUrl" class="control-label"></label>
-                <input asp-for="ZdjecieUrl" class="form-control" placeholder="Podaj link do zdjęcia" />
+                <label asp-for="ZdjecieUrl" class="control-label">Zdjęcie produktu</label>
+                <input asp-for="ZdjecieUrl" class="form-control color" placeholder="Podaj link do zdjęcia produktu" />
                 <span asp-validation-for="ZdjecieUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Dodaj Produkt" class="btn btn-primary" />
+                <input id="przycisk" type="submit" value="Dodaj Produkt" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index" class="btn btn-secondary">Powrót do listy</a>
 </div>
 
 <!--Sprawdza poprawność danych w formularzu po stronie klienta (przed wysłaniem na serwer)-->
